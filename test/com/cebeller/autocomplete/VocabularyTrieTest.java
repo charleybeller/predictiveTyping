@@ -84,6 +84,14 @@ public class VocabularyTrieTest {
     }
 
     @Test
+    public void whenPrefixIsValidWord_getWordsIncludesPrefix() {
+        populateTrie("the them they their theses");
+        List<String> matches = trie.keysWithPrefix("the");
+        assertEquals(5, matches.size());
+        assertEquals("the", matches.get(0));
+    }
+
+    @Test
     public void withLongPassage_GetsAllAndOnlyPrefixKeys() {
         populateTrie("The third thing that I need to tell you is that this thing does not think thoroughly.");
         List<String> matches = trie.keysWithPrefix("thi");

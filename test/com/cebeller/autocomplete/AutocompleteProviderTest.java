@@ -92,6 +92,19 @@ public class AutocompleteProviderTest {
     }
 
     @Test
+    public void getWords_IgnoresCaseOnFragment() {
+        completer.train("The them They their Theses");
+        List<Candidate> matches = completer.getWords("The");
+        assertEquals(5, matches.size());
+        assertCandidate("the", 1, matches.get(0));
+    }
+
+    private void assertCandidate(String word, int confidence, Candidate candidate) {
+        assertEquals(word, candidate.getWord());
+        assertEquals(confidence, candidate.getConfidence());
+    }
+
+    @Test
     public void withPassageTrain_fragmentsProduceExampleCandidates() {
         String passage = "The third thing that I need to tell you is that this thing does not think thoroughly.";
         completer.train(passage);
@@ -123,10 +136,5 @@ public class AutocompleteProviderTest {
             }
         }
         System.out.println();
-    }
-
-    private void assertCandidate(String word, int confidence, Candidate candidate) {
-        assertEquals(word, candidate.getWord());
-        assertEquals(confidence, candidate.getConfidence());
     }
 }

@@ -11,7 +11,7 @@ public class AutocompleteProvider {
     }
 
     public List<Candidate> getWords(String fragment) {
-        List<String> keys = unigramFrequencies.keysWithPrefix(fragment);
+        List<String> keys = unigramFrequencies.keysWithPrefix(fragment.toLowerCase());
         return getSortedCandidates(keys);
     }
 

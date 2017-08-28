@@ -81,7 +81,11 @@ public class VocabularyTrie {
     public List<String> keysWithPrefix(String prefix) {
         List<String> keys = new ArrayList<>();
         Node start = get(root, prefix, 0);
-        if (start == null) return keys;
+        if (start == null) {
+            return keys;
+        } else if (start.value > 0) {
+            keys.add(prefix);
+        }
         return collect(start.mid, prefix, keys);
     }
 }

@@ -55,57 +55,52 @@ public class VocabularyTrieTest {
 
     @Test
     public void whenPutMultipleKeys_CanGetAllValues() {
-        trie.put("key", 1);
-        trie.put("kex", 2);
-        trie.put("kez", 3);
-        assertEquals(1, trie.get("key"));
-        assertEquals(2, trie.get("kex"));
-        assertEquals(3, trie.get("kez"));
+        trie.put("keyA", 1);
+        trie.put("keyB", 2);
+        trie.put("keyC", 3);
+        assertEquals(1, trie.get("keyA"));
+        assertEquals(2, trie.get("keyB"));
+        assertEquals(3, trie.get("keyC"));
     }
 
     @Test
     public void whenPutMultipleKeys_CanGetKeysInOrder() {
-        trie.put("kez", 3);
-        trie.put("kex", 2);
-        trie.put("key", 1);
+        trie.put("keyC", 3);
+        trie.put("keyB", 2);
+        trie.put("keyA", 1);
         trie.put("not", 4);
         trie.put("and", 5);
-        assertEquals(asList("and", "kex", "key", "kez", "not"), trie.keys());
+        assertEquals(asList("and", "keyA", "keyB", "keyC", "not"), trie.keys());
     }
 
     @Test
     public void whenPutMultipleKeys_CanGetPrefixedKeysInOrder() {
-        trie.put("kez", 3);
-        trie.put("kex", 2);
-        trie.put("key", 1);
+        trie.put("keyC", 3);
+        trie.put("keyB", 2);
+        trie.put("keyA", 1);
         trie.put("not", 4);
         trie.put("and", 5);
-        assertEquals(asList("kex", "key", "kez"), trie.keysWithPrefix("ke"));
+        assertEquals(asList("keyA", "keyB", "keyC"), trie.keysWithPrefix("ke"));
     }
 
     @Test
     public void whenPrefixIsValidWord_getWordsIncludesPrefix() {
-        populateTrie("the them they their theses");
-        List<String> matches = trie.keysWithPrefix("the");
-        assertEquals(5, matches.size());
-        assertEquals("the", matches.get(0));
+        populateTrie("key keyA keyB keyC");
+        List<String> matches = trie.keysWithPrefix("key");
+        assertEquals(4, matches.size());
+        assertEquals("key", matches.get(0));
     }
 
     @Test
-    public void withLongPassage_GetsAllAndOnlyPrefixKeys() {
+    public void withPassage_GetsAllAndOnlyPrefixKeys() {
         populateTrie("The third thing that I need to tell you is that this thing does not think thoroughly.");
         List<String> matches = trie.keysWithPrefix("thi");
         assertEquals(4, matches.size());
     }
 
     private void populateTrie(String passage) {
-        String[] tokens = passage.toLowerCase().split("(\\W|_)+");
-        for (String token : tokens) {
-            if (!trie.contains(token)) {
-                trie.put(token, 1);
-            } else {
-                trie.put(token, trie.get(token) + 1);
-            }
+        for (String token : passage.split(" ")) {
+            trie.put(token, 1);
         }
     }
 

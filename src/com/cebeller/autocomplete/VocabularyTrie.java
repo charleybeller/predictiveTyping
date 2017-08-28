@@ -13,9 +13,6 @@ public class VocabularyTrie {
         Node left, right, mid;
     }
 
-    public VocabularyTrie() {
-    }
-
     public void put(String key, int value) {
         if (key.length() < 1) throw new IllegalArgumentException("VocabularyTrie keys must be at least length 1");
         if (value < 1) throw new IllegalArgumentException("VocabularyTrie values must be greater than 0");

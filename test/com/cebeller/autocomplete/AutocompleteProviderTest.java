@@ -1,15 +1,12 @@
 package com.cebeller.autocomplete;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class AutocompleteProviderTest {
@@ -26,13 +23,13 @@ public class AutocompleteProviderTest {
     }
 
     @Test
-    public void beforeTrain_getWordsIsEmpty() {
+    public void beforeTrain_GetWordsIsEmpty() {
         List<Candidate> words = completer.getWords("thi");
         assertTrue(words.isEmpty());
     }
 
     @Test
-    public void withEmptyTrain_getWordsIsEmpty() {
+    public void withEmptyTrain_GetWordsIsEmpty() {
         completer.train("");
         List<Candidate> words = completer.getWords("thi");
         assertTrue(words.isEmpty());
@@ -62,27 +59,27 @@ public class AutocompleteProviderTest {
     }
 
     @Test
-    public void tokensAreLowercase() {
+    public void tokensAreLowercased() {
         String passage = "This is a passage.";
         assertEquals(asList("this", "is", "a", "passage"), completer.getTokens(passage));
     }
 
     @Test
-    public void withPassageTrain_frequenciesTrieIsNotEmpty() {
+    public void withPassageTrain_FrequenciesTrieIsNotEmpty() {
         String passage = "one two two";
         completer.train(passage);
         assertEquals(2, completer.unigramFrequencies.get("two"));
     }
 
     @Test
-    public void withPassageTrain_canGetCandidates() {
+    public void withPassageTrain_CanGetCandidates() {
         String passage = "one two two";
         completer.train(passage);
         assertEquals(2, completer.getCandidates(asList("one", "two")).size());
     }
 
     @Test
-    public void withPassageTrain_canGetSortedCandidates() {
+    public void withPassageTrain_CanGetSortedCandidates() {
         String passage = "one two two";
         completer.train(passage);
         List<Candidate> descending = completer.getSortedCandidates(asList("one", "two"));
@@ -92,7 +89,7 @@ public class AutocompleteProviderTest {
     }
 
     @Test
-    public void getWords_IgnoresCaseOnFragment() {
+    public void getWords_IgnoresCaseOnFragmentQuery() {
         completer.train("The them They their Theses");
         List<Candidate> matches = completer.getWords("The");
         assertEquals(5, matches.size());
@@ -105,7 +102,7 @@ public class AutocompleteProviderTest {
     }
 
     @Test
-    public void withPassageTrain_fragmentsProduceExampleCandidates() {
+    public void withPassageTrain_FragmentsProduceExampleCandidates() {
         String passage = "The third thing that I need to tell you is that this thing does not think thoroughly.";
         completer.train(passage);
 
@@ -127,7 +124,6 @@ public class AutocompleteProviderTest {
 
     private void printCandidates(String input, List<Candidate> candidates) {
         System.out.print(String.format("Input: \"%s\" --> ", input));
-        Iterator<Candidate> iterator = candidates.iterator();
         for (int i = 0; i < candidates.size(); i++) {
             Candidate c = candidates.get(i);
             System.out.print(String.format("\"%s\" (%d)", c.getWord(), c.getConfidence()));
@@ -136,5 +132,37 @@ public class AutocompleteProviderTest {
             }
         }
         System.out.println();
+    }
+
+    @Test
+    public void withTrainOnMultiplePassages_FrequenciesTrieLearnsMore() {
+        String passage = "The third thing that I need to tell you is that this thing does not think thoroughly.";
+        completer.train(passage);
+
+        String preamble = "When, in the course of human events, it becomes necessary for one people to dissolve the" +
+                " political bonds which have connected them with another, and to assume among the powers of the earth," +
+                " the separate and equal station to which the laws of nature and of nature's God entitle them, a decent" +
+                " respect to the opinions of mankind requires that they should declare the causes which impel them to the" +
+                " separation.\n" +
+                "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their " +
+                "Creator with certain unalienable rights, that among these are life, liberty and the pursuit of happiness. " +
+                "That to secure these rights, governments are instituted among men, deriving their just powers from the " +
+                "consent of the governed. That whenever any form of government becomes destructive to these ends, it is " +
+                "the right of the people to alter or to abolish it, and to institute new government, laying its foundation" +
+                " on such principles and organizing its powers in such form, as to them shall seem most likely to effect" +
+                " their safety and happiness. Prudence, indeed, will dictate that governments long established should not" +
+                " be changed for light and transient causes; and accordingly all experience hath shown that mankind are " +
+                "more disposed to suffer, while evils are sufferable, than to right themselves by abolishing the forms to " +
+                "which they are accustomed. But when a long train of abuses and usurpations, pursuing invariably the same " +
+                "object evinces a design to reduce them under absolute despotism, it is their right, it is their duty, to " +
+                "throw off such government, and to provide new guards for their future security. --\n" +
+                "Such has been the patient sufferance of these colonies; and such is now the necessity which constrains " +
+                "them to alter their former systems of government. The history of the present King of Great Britain is a " +
+                "history of repeated injuries and usurpations, all having in direct object the establishment of an absolute " +
+                "tyranny over these states. To prove this, let facts be submitted to a candid world.\n";
+        completer.train(preamble);
+        List<Candidate> th = completer.getWords("th");
+        assertEquals(14, th.size());
+        assertCandidate("the", 22, th.get(0));
     }
 }

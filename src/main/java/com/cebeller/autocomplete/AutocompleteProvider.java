@@ -7,6 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * A trie backed class for tracking word frequencies and suggesting word completions
+ */
 public class AutocompleteProvider {
 
     VocabularyTrie unigramFrequencies;
@@ -15,6 +18,13 @@ public class AutocompleteProvider {
         unigramFrequencies = new VocabularyTrie();
     }
 
+    /**
+     * Takes a word fragment prefix and returns all Candidates matching that prefix
+     *  ranked by descending confidence (unigram frequency on seen training passages).
+     *
+     * @param fragment  a word prefix
+     * @return          all candidates matching the prefix in descending order of confidence
+     */
     public List<Candidate> getWords(String fragment) {
         List<String> keys = unigramFrequencies.keysWithPrefix(fragment.toLowerCase());
         return getSortedCandidates(keys);
@@ -42,6 +52,12 @@ public class AutocompleteProvider {
         return candidates;
     }
 
+    /**
+     * Takes a passage string, tokenizes the passage by removing whitespace, punctuation, and symbols
+     *  and for each token increments the count of that token in our dictionary.
+     *
+     * @param passage a string passage for training vocabulary counts
+     */
     public void train(String passage) {
         List<String> tokens = getTokens(passage);
         for (String token : tokens) {
@@ -75,7 +91,7 @@ public class AutocompleteProvider {
 
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String line;
-            List<String> tokens = null;
+            List<String> tokens;
             String fragment;
             while ((line = reader.readLine()) != null && !line.equals("quit!")) {
                 tokens = completer.getTokens(line);

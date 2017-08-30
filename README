@@ -1,16 +1,22 @@
 Autocompleter
 
-Implements a trie backed lookup for predictive typing. Can be trained on text passages. Once trained it can return words with frequency counts matching a prefix.
+Implements a trie backed lookup for predictive typing. Can be trained on text passages. 
+Once trained it can return words with frequency counts matching a prefix.
 
 Installing
 
-The project is built with gradle (https://gradle.org/) and includes a gradle wrapper script which can be run even on systems without gradle installed.
+The project is built with gradle (https://gradle.org/) and includes a gradle wrapper script 
+which can be run even on systems without gradle installed.
 
 Clone the repository and then, in the root directory invoke:
 ./gradlew clean build
 
-The project includes a main() method that reads a passage from a file for initial training. Once trained a user can enter word fragments at the console and recieve suggestions back. Invoking this method via gradle will read in the text of the Declaration of Independence (declaration.txt) and wait for user input.
+The project includes a main() method that reads a passage from a file for initial training. 
+Once trained a user can enter word fragments at the console and recieve suggestions back. 
+Invoking this method via gradle will read in the text of the Declaration of Independence 
+(declaration.txt) and wait for user input.
 ./gradlew clean build run
 
-Progress bars from gradle can be removed by setting the environment variable TERM=dumb in unix based systems.
+Progress bars from gradle can be removed by setting the environment variable TERM=dumb in 
+unix based systems.
 TERM=dumb && ./gradlew run

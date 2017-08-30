@@ -1,0 +1,28 @@
+ext {
+  TERM="dumb"
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+dependencies {
+  testCompile 'junit:junit:4.12'
+}
+
+repositories {
+  mavenCentral()
+}
+
+test {
+  testLogging {
+    events "passed", "skipped", "failed", "standardOut", "standardError"
+  }
+}
+
+mainClassName = 'com.cebeller.autocomplete.AutocompleteProvider'
+
+run {
+  environment "TERM", "dumb"
+  args += 'declaration.txt'
+  standardInput = System.in
+}

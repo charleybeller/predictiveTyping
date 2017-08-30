@@ -106,32 +106,17 @@ public class AutocompleteProviderTest {
         String passage = "The third thing that I need to tell you is that this thing does not think thoroughly.";
         completer.train(passage);
 
-        List<Candidate> thi = completer.getWords("thi");
-        printCandidates("thi", thi);
+        List<Candidate> thi = completer.printCandidates("thi");
         assertEquals(4, thi.size());
         assertCandidate("thing", 2, thi.get(0));
 
-        List<Candidate> nee = completer.getWords("nee");
-        printCandidates("nee", nee);
+        List<Candidate> nee = completer.printCandidates("nee");
         assertEquals(1, nee.size());
         assertCandidate("need", 1, nee.get(0));
 
-        List<Candidate> th = completer.getWords("th");
-        printCandidates("th", th);
+        List<Candidate> th = completer.printCandidates("th");
         assertEquals(7, th.size());
         assertCandidate("that", 2, th.get(0));
-    }
-
-    private void printCandidates(String input, List<Candidate> candidates) {
-        System.out.print(String.format("Input: \"%s\" --> ", input));
-        for (int i = 0; i < candidates.size(); i++) {
-            Candidate c = candidates.get(i);
-            System.out.print(String.format("\"%s\" (%d)", c.getWord(), c.getConfidence()));
-            if (i < candidates.size() - 1) {
-                System.out.print(", ");
-            }
-        }
-        System.out.println();
     }
 
     @Test
